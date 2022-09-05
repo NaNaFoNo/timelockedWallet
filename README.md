@@ -16,6 +16,18 @@ at a specific block height.
 - The beneficiary can claim the tokens once the specified block height is reached.
 - Additionally, the beneficiary can transfer the right to claim the wallet to a different principal. (For whatever reason.)
 
+## Smart-Claimant
+
+Creating a contract that can claim tokens from the time-locked wallet contract.
+
+The custom claim function will:
+
+- Call claim on the time-locked wallet, exiting if it fails.
+- Read the balance of the current contract. We do not read the balance of the time-locked wallet because someone might have sent some tokens to the smart-claimant by mistake. We want to include those tokens as well.
+- Calculate an equal share for each recipient by dividing the total balance by the number of recipients.
+- Send the calculated share to each recipient.
+- Transfer the remainder in case of a rounding error. (Remember that integers have no decimal point.)
+
 
 ## Running Tests
 
@@ -27,6 +39,8 @@ To run tests, run the following command
 
 ### Unit tests
 
+#### timelocked-wallet
+
 - Allows the contract owner to lock an amount.
 - Does not allow anyone else to lock an amount.
 - Cannot be locked more than once.
@@ -36,6 +50,10 @@ To run tests, run the following command
 - Allows the beneficiary to claim the balance when the block height is reached.
 - Does not allow the beneficiary to claim the balance before the block-height is reached.
 - Nobody but the beneficiary can claim the balance once the block height is reached.
+
+#### smart-claimant
+
+- Disburses tokens once it can claim the time-locked wallet balance
 
 
 ## Project Source Code
